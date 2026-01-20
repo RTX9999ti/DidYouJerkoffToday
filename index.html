@@ -19,6 +19,22 @@
             padding: 40px 20px;
             overflow-x: hidden;
         }
+        .role-box {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
+        }
+        .role-box label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
         .header {
             display: flex;
             align-items: center;
@@ -161,6 +177,11 @@
     </style>
 </head>
 <body>
+    <div class="role-box">
+        <label><input type="radio" name="role" value="giver" checked> 给予者</label>
+        <label><input type="radio" name="role" value="receiver"> 接受者</label>
+    </div>
+
     <div class="header">
         <img src="https://img.icons8.com/fluency/96/000000/toilet-paper.png" alt="抽纸图标">
         <h1>撸了么APP</h1>
@@ -187,7 +208,7 @@
             </button>
         </div>
         <p class="tip">放心，我们不会告诉你妈你撸了的 😏</p>
-        <div class="counter" id="counter">今年你累计撸管了 <span id="count">0</span> 次</div>
+        <div class="counter">今年你累计撸管了 <span id="count">0</span> 次</div>
     </div>
 
     <div class="footer">
@@ -203,6 +224,8 @@
 
     <script>
         let totalCount = 0;
+        let currentRole = 'giver';
+        let activeEmoji = '🥛';
         const countElement = document.getElementById('count');
         const yesBtn = document.getElementById('btn-yes');
         const noBtn = document.getElementById('btn-no');
@@ -215,11 +238,26 @@
             countElement.textContent = totalCount;
         }
 
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                currentRole = radio.value;
+                if (currentRole === 'receiver') {
+                    replaceForReceiver();
+                    replaceEmoji('🥛', '🍆');
+                    activeEmoji = '🍆';
+                } else {
+                    replaceAllText(/被日/g, '撸');
+                    replaceEmoji('🍆', '🥛');
+                    activeEmoji = '🥛';
+                }
+            });
+        });
+
         yesBtn.addEventListener('click', () => {
             totalCount++;
             countElement.textContent = totalCount;
             localStorage.setItem('masturbationCount', totalCount);
-            createParticles(yesBtn, '🥛', 15);
+            createParticles(yesBtn, currentRole === 'receiver' ? '❤️' : activeEmoji, 15);
         });
 
         noBtn.addEventListener('click', () => {
@@ -256,9 +294,7 @@
                             countElement.textContent = totalCount;
                             localStorage.setItem('masturbationCount', totalCount);
                         }
-                    } catch (error) {
-                        console.error('文件解析失败', error);
-                    }
+                    } catch {}
                 };
                 reader.readAsText(file);
             });
@@ -278,7 +314,6 @@
             const rect = btn.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-
             for (let i = 0; i < count; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -287,14 +322,31 @@
                 particle.style.setProperty('--random-x', randomX);
                 particle.style.left = `${centerX}px`;
                 particle.style.top = `${centerY}px`;
-                particle.style.fontSize = `${1 + Math.random() * 1}rem`;
+                particle.style.fontSize = `${1 + Math.random()}rem`;
                 particle.style.animationDelay = `${Math.random() * 0.5}s`;
-                
                 document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
 
-                setTimeout(() => {
-                    particle.remove();
-                }, 2000);
+        function replaceAllText(pattern, to) {
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            let node;
+            while (node = walker.nextNode()) {
+                node.nodeValue = node.nodeValue.replace(pattern, to);
+            }
+        }
+
+        function replaceForReceiver() {
+            replaceAllText(/撸管/g, '被日');
+            replaceAllText(/撸/g, '被日');
+        }
+
+        function replaceEmoji(from, to) {
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            let node;
+            while (node = walker.nextNode()) {
+                node.nodeValue = node.nodeValue.split(from).join(to);
             }
         }
     </script>
