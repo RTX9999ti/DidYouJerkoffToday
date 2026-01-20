@@ -174,6 +174,145 @@
             color: #6b7280;
             font-size: 0.9rem;
         }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        body.dark {
+            background-color: #111827;
+        }
+        body.dark .role-box {
+            background-color: #1f2937;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            color: #e5e7eb;
+        }
+        body.dark .header h1 {
+            background-color: #1d4ed8;
+        }
+        body.dark .card {
+            background-color: #1f2937;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        body.dark .card h2 {
+            color: #e5e7eb;
+        }
+        body.dark .slogan {
+            background-color: #fbbf24;
+            border-color: #f59e0b;
+        }
+        body.dark .slogan p {
+            color: #7c2d12;
+        }
+        body.dark .tip {
+            color: #d1d5db;
+        }
+        body.dark .counter {
+            color: #60a5fa;
+        }
+        body.dark .file-btn {
+            background-color: #374151;
+            color: #e5e7eb;
+        }
+        body.dark .theme-toggle {
+            background-color: #1f2937;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 12px;
+            }
+            .role-box {
+                left: 10px;
+                top: auto;
+                bottom: 10px;
+                transform: none;
+                display: flex;
+                flex-direction: row;
+                gap: 12px;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                border-radius: 10px;
+                z-index: 20;
+            }
+            .role-box label {
+                margin: 0;
+            }
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            .header img {
+                width: 50px;
+                height: 50px;
+                margin-right: 0;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+                padding: 8px 18px;
+            }
+            .slogan {
+                padding: 12px 18px;
+            }
+            .slogan p {
+                font-size: 1.2rem;
+            }
+            .card {
+                padding: 20px;
+            }
+            .card h2 {
+                font-size: 1.1rem;
+                margin-bottom: 18px;
+            }
+            .options {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                margin: 18px 0;
+            }
+            .option-btn {
+                padding: 18px 14px;
+                font-size: 1.05rem;
+            }
+            .emoji {
+                font-size: 1.8rem;
+            }
+            .tip {
+                font-size: 0.85rem;
+            }
+            .counter {
+                font-size: 0.95rem;
+            }
+            .file-actions {
+                bottom: 8px;
+                right: 8px;
+                flex-direction: column;
+            }
+            .file-btn {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+            }
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                top: 8px;
+                right: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -181,6 +320,8 @@
         <label><input type="radio" name="role" value="giver" checked> 给予者</label>
         <label><input type="radio" name="role" value="receiver"> 接受者</label>
     </div>
+
+    <div class="theme-toggle" id="themeToggle">🌞</div>
 
     <div class="header">
         <img src="https://img.icons8.com/fluency/96/000000/toilet-paper.png" alt="抽纸图标">
@@ -232,10 +373,16 @@
         const saveBtn = document.getElementById('save-btn');
         const loadBtn = document.getElementById('load-btn');
         const clearBtn = document.getElementById('clear-btn');
+        const themeToggle = document.getElementById('themeToggle');
 
         if (localStorage.getItem('masturbationCount')) {
             totalCount = parseInt(localStorage.getItem('masturbationCount'));
             countElement.textContent = totalCount;
+        }
+
+        if (localStorage.getItem('themeMode') === 'dark') {
+            document.body.classList.add('dark');
+            themeToggle.textContent = '🌙';
         }
 
         document.querySelectorAll('input[name="role"]').forEach(radio => {
@@ -307,6 +454,17 @@
                 countElement.textContent = totalCount;
                 localStorage.removeItem('masturbationCount');
                 document.querySelectorAll('.particle').forEach(p => p.remove());
+            }
+        });
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            if (document.body.classList.contains('dark')) {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('themeMode', 'dark');
+            } else {
+                themeToggle.textContent = '🌞';
+                localStorage.setItem('themeMode', 'light');
             }
         });
 
