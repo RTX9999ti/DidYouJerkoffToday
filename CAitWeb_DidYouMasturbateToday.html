@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>撸了吗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-size: 2.5rem;
+        }
+        .slogan {
+            background-color: #fff9c4;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 15px 40px;
+            margin: 20px 0;
+        }
+        .slogan p {
+            font-size: 1.5rem;
+            color: #d97706;
+            font-weight: bold;
+            text-align: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #374151;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .option-btn {
+            padding: 25px 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        .option-btn:hover {
+            transform: scale(1.03);
+        }
+        .btn-yes {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .btn-no {
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+        .btn-remind {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .emoji {
+            font-size: 2rem;
+        }
+        .tip {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        .counter {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        .file-actions {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+        .file-btn {
+            padding: 5px 8px;
+            border: none;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+        .file-btn:hover {
+            opacity: 1;
+        }
+        .particle {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 5;
+            animation: floatUp 2s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-800px) translateX(calc(var(--random-x) * 100px));
+            }
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://img.icons8.com/fluency/96/000000/toilet-paper.png" alt="抽纸图标">
+        <h1>撸了么APP</h1>
+    </div>
+
+    <div class="slogan">
+        <p>今天，你撸了吗？</p>
+    </div>
+
+    <div class="card">
+        <h2>🤔 请选择？</h2>
+        <div class="options">
+            <button class="option-btn btn-yes" id="btn-yes">
+                <span class="emoji">🥛</span>
+                我撸了！爽！
+            </button>
+            <button class="option-btn btn-no" id="btn-no">
+                <span class="emoji">😰</span>
+                没撸呢...
+            </button>
+            <button class="option-btn btn-remind">
+                <span class="emoji">😃</span>
+                这倒是提醒我了!
+            </button>
+        </div>
+        <p class="tip">放心，我们不会告诉你妈你撸了的 😏</p>
+        <div class="counter" id="counter">今年你累计撸管了 <span id="count">0</span> 次</div>
+    </div>
+
+    <div class="footer">
+        <p>🥛 全球首款撸管大数据平台 ©2026</p>
+        <p>✨ 每一次都值得被记录，每一发都值得被尊重 ✨</p>
+    </div>
+
+    <div class="file-actions">
+        <button class="file-btn" id="save-btn">保存数据</button>
+        <button class="file-btn" id="load-btn">加载数据</button>
+        <button class="file-btn" id="clear-btn">清空数据</button>
+    </div>
+
+    <script>
+        let totalCount = 0;
+        const countElement = document.getElementById('count');
+        const yesBtn = document.getElementById('btn-yes');
+        const noBtn = document.getElementById('btn-no');
+        const saveBtn = document.getElementById('save-btn');
+        const loadBtn = document.getElementById('load-btn');
+        const clearBtn = document.getElementById('clear-btn');
+
+        if (localStorage.getItem('masturbationCount')) {
+            totalCount = parseInt(localStorage.getItem('masturbationCount'));
+            countElement.textContent = totalCount;
+        }
+
+        yesBtn.addEventListener('click', () => {
+            totalCount++;
+            countElement.textContent = totalCount;
+            localStorage.setItem('masturbationCount', totalCount);
+            createParticles(yesBtn, '🥛', 15);
+        });
+
+        noBtn.addEventListener('click', () => {
+            createParticles(noBtn, '😰', 15);
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const data = {
+                totalCount: totalCount,
+                updateTime: new Date().toLocaleString()
+            };
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `撸管统计_${new Date().getFullYear()}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        loadBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (typeof data.totalCount === 'number') {
+                            totalCount = data.totalCount;
+                            countElement.textContent = totalCount;
+                            localStorage.setItem('masturbationCount', totalCount);
+                        }
+                    } catch (error) {
+                        console.error('文件解析失败', error);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            input.click();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (confirm('确定要清空所有累计数据吗？')) {
+                totalCount = 0;
+                countElement.textContent = totalCount;
+                localStorage.removeItem('masturbationCount');
+                document.querySelectorAll('.particle').forEach(p => p.remove());
+            }
+        });
+
+        function createParticles(btn, emoji, count) {
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = emoji;
+                const randomX = (Math.random() - 0.5) * 2;
+                particle.style.setProperty('--random-x', randomX);
+                particle.style.left = `${centerX}px`;
+                particle.style.top = `${centerY}px`;
+                particle.style.fontSize = `${1 + Math.random() * 1}rem`;
+                particle.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                document.body.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
